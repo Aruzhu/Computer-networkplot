@@ -15,8 +15,12 @@ class computerplot(object):
 		while going == True:
 			currentFolders = self.populate(fullpath)
 			print currentFolders
-			if currentFolders: 
-				fullpath += "/" + random.choice( currentFolders ) # random next folder
+			
+			if currentFolders: # if not empty
+				if fullpath != "/":
+					fullpath += "/" + random.choice( currentFolders ) # random next folder
+				else:
+					fullpath += random.choice( currentFolders )
 			else: # if empty
 				del self.folderscan[fullpath][ self.folderscan[fullpath].index(fullpath) ]
 				# deleting the occurance of done folder in the folderscan entry of the Upperfolder. So that it wont be plotted twice
