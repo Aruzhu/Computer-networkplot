@@ -17,14 +17,17 @@ class computerplot(object):
 			print currentFolders
 			
 			if currentFolders: # if not empty
-				if fullpath != "/":
+			
+				if fullpath != "/": #see issue #1
 					fullpath += "/" + random.choice( currentFolders ) # random next folder
 				else:
 					fullpath += random.choice( currentFolders )
-			else: # if empty
-				del self.folderscan[fullpath][ self.folderscan[fullpath].index(fullpath) ]
-				# deleting the occurance of done folder in the folderscan entry of the Upperfolder. So that it wont be plotted twice
 			
+			else: # if empty
+				deleteOccurance(fullpath)
+			
+	
+	
 	def getUpperFolder(self, fullpath):
 		folders = fullpath.split("/")
 		return folders[ len(folders)-1 ]
@@ -32,9 +35,14 @@ class computerplot(object):
 	def graphFunc(self, x, y): # x is from (fullpath), y is to (filename)
 		self.graph.add_edge( self.getUpperFolder(x), y) # last element in folders is the upper foldername
 		
+	def deleteOccurance(self, fullpath):
+		del self.folderscan[fullpath][ self.folderscan[fullpath].index( self.getUpperFolder(fullpath) ) ]
+		# deleting the occurance of done folder in the folderscan entry of the Upperfolder. So that it wont be plotted twice
 	def populate(self, fullpath):
-		files = os.listdir(fullpath) # list all files and folders
-		
+		try:
+			files = os.listdir(fullpath) # list all files and folders
+		except:
+			
 		for file in files:
 			filePath = fullpath+"/"+file # path to the current file
 			
