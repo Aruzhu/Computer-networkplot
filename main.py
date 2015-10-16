@@ -31,7 +31,7 @@ class computerplot(object):
 				
 					self.deleteOccurance(fullpath)
 				
-	def getUpperFolder(self, fullpath):
+	def getUpperFolder(self, fullpath): # get the 
 		folders = fullpath.split("/")
 		return folders[ len(folders)-1 ]
 		
@@ -54,10 +54,11 @@ class computerplot(object):
 		folders = []
 		
 		for file in files:
-			if fullpath != "/":
+			if fullpath != "/": 
 				filepath = fullpath+"/"+file # path to the current file
-			else:
+			else: # if first scan
 				filepath = fullpath+file
+				
 			self.graphFunc(fullpath, file) # network graph them
 			
 			if os.path.isfile(filepath): # if not directory
@@ -68,8 +69,10 @@ class computerplot(object):
 		if bool(folders): # if not empty
 			print folders
 			self.folderScan[fullpath] = files
-			
-		return files, fucked
+		
+		if "System Volume Information" in folders: #acts like folder but is a file
+			folders.remove("System Volume Information")
+		return folders, fucked
 		
 computerplot = computerplot()
 computerplot.__init__()
