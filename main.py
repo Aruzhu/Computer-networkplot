@@ -51,10 +51,11 @@ class computerplot(object):
 		
 		
 		key = fullpath[0: fullpath.find( self.getFolderName(fullpath, 2) )] + self.getFolderName(fullpath, 2) # need fullpath without the first folder and "/"
-		#fullpath[ 0: self.getFolderName(fullpath, 2) ]
+		# in other words the fullpath of the upperfolder (i.e where the folder we are in is)
+
 		print "key used = " + str(key)
 		
-		if key not in self.folderScan.keys():
+		if key not in self.folderScan.keys(): # /Crash
 			fullpath = "/"
 			
 		self.folderScan[ key ].remove( upperfolder )
