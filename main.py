@@ -48,31 +48,29 @@ class computerplot(object):
 	def populate(self, fullpath):
 		fucked = False
 		files = []
-		# try:
+
 		
 		files = os.listdir(fullpath) # list all files and folders
+		folders = []
 		
-		# except WindowsError: # no premmision, se issue 2
-			# if os.path.isdir(fullpath):
-				# fucked = True
-				# self.deleteOccurance(fullpath)
-				# files = []
-
-			 
 		for file in files:
-		
-			filePath = fullpath+"/"+file # path to the current file
+			if fullpath != "/":
+				filepath = fullpath+"/"+file # path to the current file
+			else:
+				filepath = fullpath+file
 			self.graphFunc(fullpath, file) # network graph them
 			
-			if os.path.isfile(filePath): # if not directory
-				print "not folder"
+			if os.path.isfile(filepath): # if not directory
 				files.remove(file)
+			elif os.path.isdir(filepath):
+				folders.append(file)
 		
-		if bool(files): # if not empty
-			print files
+		if bool(folders): # if not empty
+			print folders
 			self.folderScan[fullpath] = files
-		print self.folderScan.keys() == files
+			
 		return files, fucked
+		
 computerplot = computerplot()
 computerplot.__init__()
 computerplot.main()
