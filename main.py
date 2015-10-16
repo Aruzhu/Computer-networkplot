@@ -15,7 +15,7 @@ class computerplot(object):
 		
 		while going == True:
 			currentFolders, fucked = self.populate(fullpath)
-			print currentFolders
+			#print currentFolders
 			
 			if fucked == True:
 				fullpath = fullpath[ 0: len( getUpperFolder(fullpath) )+1 ] # remove the upperfolder, +1 because of the backslash
@@ -28,6 +28,7 @@ class computerplot(object):
 						fullpath += random.choice( currentFolders )
 				
 				else: # if empty
+				
 					self.deleteOccurance(fullpath)
 				
 	def getUpperFolder(self, fullpath):
@@ -38,32 +39,39 @@ class computerplot(object):
 		self.graph.add_edge( self.getUpperFolder(x), y) # last element in folders is the upper foldername
 		
 	def deleteOccurance(self, fullpath):
-		del self.folderScan[fullpath][ self.folderScan[fullpath].index( self.getUpperFolder(fullpath)[1:len( self.getUpperFolder(fullpath) )] ) ]
+	
+		upperfolder = self.getUpperFolder(fullpath)
+		print "upperfolder: " + upperfolder
+		self.folderScan[ fullpath ].remove( upperfolder )
 		# deleting the occurance of done folder in the folderscan entry of the Upperfolder. So that it wont be plotted twice
 	
 	def populate(self, fullpath):
 		fucked = False
+		files = []
+		# try:
 		
-		try:
-			files = os.listdir(fullpath) # list all files and folders
-		except: # no premmision, se issue 2
-			if os.path.isdir(fullpath):
-				fucked = True
-				self.deleteOccurance(fullpath)
-			else:
-				pass
-		if not fucked:
-			for file in files:
+		files = os.listdir(fullpath) # list all files and folders
+		
+		# except WindowsError: # no premmision, se issue 2
+			# if os.path.isdir(fullpath):
+				# fucked = True
+				# self.deleteOccurance(fullpath)
+				# files = []
+
+			 
+		for file in files:
+		
+			filePath = fullpath+"/"+file # path to the current file
+			self.graphFunc(fullpath, file) # network graph them
 			
-				filePath = fullpath+"/"+file # path to the current file
-				self.graphFunc(fullpath, file) # network graph them
-				
-				if not os.path.isdir(filePath): # if not directory
-					del file
-			
-			if files: # if not empty
-				self.folderScan[fullpath] = files
-				
+			if os.path.isfile(filePath): # if not directory
+				print "not folder"
+				files.remove(file)
+		
+		if bool(files): # if not empty
+			print files
+			self.folderScan[fullpath] = files
+		print self.folderScan.keys() == files
 		return files, fucked
 computerplot = computerplot()
 computerplot.__init__()
