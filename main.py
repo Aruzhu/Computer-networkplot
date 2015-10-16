@@ -42,22 +42,30 @@ class computerplot(object):
 	
 	def graphFunc(self, x, y): # x is from (fullpath), y is to (filename)
 		self.graph.add_edge( self.getFolderName(x,1), y) # last element in folders is the upper foldername
-		
+	
+	def findOccurance(self, string, tofind):
+		occs = 0
+		for i in string:
+			if i == tofind:
+				occs += 1
+		return 
+	
 	def deleteOccurance(self, fullpath):
 	
 		upperfolder = self.getFolderName(fullpath,1)
 		print "upperfolder: " + upperfolder + "	at " + fullpath
 		
 		
-		
-		key = fullpath[0: fullpath.find( self.getFolderName(fullpath, 2) )] + self.getFolderName(fullpath, 2) # need fullpath without the first folder and "/"
-		# in other words the fullpath of the upperfolder (i.e where the folder we are in is)
+		if len(fullpath.split("/")) != 1:
+			key = fullpath[0: fullpath.find( self.getFolderName(fullpath, 2) )] + self.getFolderName(fullpath, 2) # need fullpath without the first folder and "/"
+			# in other words the fullpath of the upperupperfolder (i.e where the folder we are in is) /upperupperfolder/upperfolder/where we are
+		else: # /selbulantimelapsv2, /xfoldername
+			key = "/"
 
 		print "key used = " + str(key)
 		
-		if key not in self.folderScan.keys(): # /Crash
-			fullpath = "/"
-			
+		for i in self.folderScan[key]:
+			print i
 		self.folderScan[ key ].remove( upperfolder )
 		# deleting the occurance of done folder in the folderscan entry of the Upperfolder. So that it wont be plotted twice
 	
@@ -65,8 +73,10 @@ class computerplot(object):
 		fucked = False
 		files = []
 
-		
-		files = os.listdir(fullpath) # list all files and folders
+		try:
+			files = os.listdir(fullpath) # list all files and folders
+		except:
+			fucked = True
 		folders = []
 		
 		for file in files:
@@ -83,7 +93,6 @@ class computerplot(object):
 				folders.append(file)
 		
 		if bool(folders): # if not empty
-			print folders
 			self.folderScan[fullpath] = files
 		
 		if "System Volume Information" in folders: #acts like folder but is a file
