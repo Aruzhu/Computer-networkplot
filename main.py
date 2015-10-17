@@ -31,10 +31,23 @@ class computerplot(object):
 				
 					self.deleteOccurance(fullpath)
 					
-					fullpath = fullpath[0: fullpath.find( self.getFolderName(fullpath, 2) )] + self.getFolderName(fullpath, 2) # see comment under key, in deleteOccurance
-					fullpath += "/" + random.choice( folderScan[ GetKeyFolderScan(fullpath)] ) 
+					files = self.FolderScan[ self.GetKeyFolderScan(fullpath)]
+					
+					if files != []:
+						fullpath = self.RemoveCurrentFolder(fullpath) # removing first folder and "/"
+						fullpath += "/" + random.choice( folderScan[ GetKeyFolderScan(fullpath)] ) 
+					else:
+						# need to loop upwards until it finds a folder with unplotted folders
+						print "finding closest undone folder"
+						while files == []:
+							fullpath = self.RemoveCurrentFolder(fullpath)
+							files = FolderScan[ self.GetKeyFolderScan(fullpath) ]
+	def RemoveCurrentFolder(self, fullpath): # remove the current folder from fullpath
+		fullpath = fullpath[0: fullpath.find( self.getFolderName(fullpath, 2) )] + self.getFolderName(fullpath, 2)
+		#notice that we remove the secound folder and then adds it back again.
+		return fullpath
 	
-	def getFolderName(self, fullpath, backnum):
+	def getFolderName(self, fullpath, backnum): # backnum 1 = folder currently in. 2= the folder where the folder we are currently are in is.
 		folders = fullpath.split("/")
 		toret = folders[ len(folders)-backnum ]
 		
@@ -52,14 +65,13 @@ class computerplot(object):
 				occs += 1
 		return occs
 	
-	def GetKeyFolderScan(fullpath):
+	def GetKeyFolderScan(self,fullpath): # get key for the FolderScan dictionary
 		upperfolder = self.getFolderName(fullpath,1)
 		print "upperfolder: " + upperfolder + "	at " + fullpath
 		
 		
 		if self.findOccurance("/", fullpath) != 1:
-			key = fullpath[0: fullpath.find( self.getFolderName(fullpath, 2) )] + self.getFolderName(fullpath, 2) # need fullpath without the first folder and "/"
-			# in other words the fullpath of the upperupperfolder (i.e where the folder we are in is) /upperupperfolder/upperfolder/where we are
+			key = self.RemoveCurrentFolder(fullpath) # remove current folder from fullpath
 		else: # /selbulantimelapsv2, /xfoldername
 			key = "/"
 		
@@ -67,16 +79,16 @@ class computerplot(object):
 			key = "/"
 		print "key used = " + str(key)
 		
-		return 
-	def deleteOccurance(self, fullpath):
+		return key, upperfolder
+	def deleteOccurance(self, fullpath):# deleting the occurance of done folder in the folderscan entry of the Upperfolder. So that it wont be plotted twice
 	
-		key = GetKeyFolderScan(fullpath)
+		key, upperfolder = self.GetKeyFolderScan(fullpath)
 		
 		if upperfolder in self.folderScan[ key]:
 			self.folderScan[ key ].remove( upperfolder )
-		# deleting the occurance of done folder in the folderscan entry of the Upperfolder. So that it wont be plotted twice
+		
 	
-	def populate(self, fullpath):
+	def populate(self, fullpath): # scan the fullpath directory
 		fucked = False
 		files = []
 
@@ -87,9 +99,9 @@ class computerplot(object):
 		folders = []
 		
 		for file in files:
-			if fullpath != "/": 
+			if fullpath != "/": # if not first scan
 				filepath = fullpath+"/"+file # path to the current file
-			else: # if first scan
+			else: # if first scan, / + file
 				filepath = fullpath+file
 				
 			self.graphFunc(fullpath, file) # network graph them
