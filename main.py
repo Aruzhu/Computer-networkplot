@@ -89,6 +89,7 @@ class computerplot(object):
 			key = "/"
 		print "key used = " + str(key)
 		
+
 		self.upperfolder = upperfolder # makes the use of the function much easyer
 		return key
 	def deleteOccurance(self, fullpath):# deleting the occurance of done folder in the folderscan entry of the Upperfolder. So that it wont be plotted twice
@@ -99,8 +100,9 @@ class computerplot(object):
 			self.folderScan[ key ].remove( self.upperfolder )
 		
 	
-	def CheckPopulate(self, fullpath):
+	def CheckPopulate(self, fullpath): # check if fullpath can be scanned and works.
 		if fullpath.find("*.*") == -1:
+			#fullpath = fullpath[ 0: len( self.getFolderName(fullpath,1) )+1 ]
 			fullpath = self.EmptyLoop(fullpath)
 		try :
 			files = os.listdir(fullpath)
