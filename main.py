@@ -30,8 +30,10 @@ class computerplot(object):
 				else: # if empty
 				
 					self.deleteOccurance(fullpath)
-				
-
+					
+					fullpath = fullpath[0: fullpath.find( self.getFolderName(fullpath, 2) )] + self.getFolderName(fullpath, 2) # see comment under key, in deleteOccurance
+					fullpath += "/" + random.choice( folderScan[ GetKeyFolderScan(fullpath)] ) 
+	
 	def getFolderName(self, fullpath, backnum):
 		folders = fullpath.split("/")
 		toret = folders[ len(folders)-backnum ]
@@ -43,30 +45,35 @@ class computerplot(object):
 	def graphFunc(self, x, y): # x is from (fullpath), y is to (filename)
 		self.graph.add_edge( self.getFolderName(x,1), y) # last element in folders is the upper foldername
 	
-	def findOccurance(self, string, tofind):
+	def findOccurance(self, string, tofind): # does not work with letter of tofind more than 1. we dont need that either
 		occs = 0
 		for i in string:
 			if i == tofind:
 				occs += 1
-		return 
+		return occs
 	
-	def deleteOccurance(self, fullpath):
-	
+	def GetKeyFolderScan(fullpath):
 		upperfolder = self.getFolderName(fullpath,1)
 		print "upperfolder: " + upperfolder + "	at " + fullpath
 		
 		
-		if len(fullpath.split("/")) != 1:
+		if self.findOccurance("/", fullpath) != 1:
 			key = fullpath[0: fullpath.find( self.getFolderName(fullpath, 2) )] + self.getFolderName(fullpath, 2) # need fullpath without the first folder and "/"
 			# in other words the fullpath of the upperupperfolder (i.e where the folder we are in is) /upperupperfolder/upperfolder/where we are
 		else: # /selbulantimelapsv2, /xfoldername
 			key = "/"
-
+		
+		if key == "":
+			key = "/"
 		print "key used = " + str(key)
 		
-		for i in self.folderScan[key]:
-			print i
-		self.folderScan[ key ].remove( upperfolder )
+		return 
+	def deleteOccurance(self, fullpath):
+	
+		key = GetKeyFolderScan(fullpath)
+		
+		if upperfolder in self.folderScan[ key]:
+			self.folderScan[ key ].remove( upperfolder )
 		# deleting the occurance of done folder in the folderscan entry of the Upperfolder. So that it wont be plotted twice
 	
 	def populate(self, fullpath):
