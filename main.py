@@ -17,9 +17,9 @@ class computerplot(object):
 			currentFolders, fucked = self.populate(fullpath)
 			#print currentFolders
 			
-			if fucked == True:
+			if fucked == True: # did not have premission to scan the folder
 				fullpath = fullpath[ 0: len( self.getFolderName(fullpath,1) )+1 ] # remove the upperfolder, +1 because of the backslash
-			else:
+			else: # if everything works
 				if currentFolders: # if not empty
 				
 					if fullpath != "/": #see issue #1
@@ -31,7 +31,7 @@ class computerplot(object):
 				
 					self.deleteOccurance(fullpath)
 					
-					files = self.FolderScan[ self.GetKeyFolderScan(fullpath)]
+					files = self.folderScan[ self.GetKeyFolderScan(fullpath)]
 					
 					if files != []:
 						fullpath = self.RemoveCurrentFolder(fullpath) # removing first folder and "/"
