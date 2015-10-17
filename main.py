@@ -14,6 +14,7 @@ class computerplot(object):
 		fullpath = "/"
 		
 		while going == True:
+			fullpath = self.CheckPopulate(fullpath)
 			currentFolders, fucked = self.populate(fullpath)
 			#print currentFolders
 			
@@ -35,14 +36,22 @@ class computerplot(object):
 					
 					if files != []:
 						fullpath = self.RemoveCurrentFolder(fullpath) # removing first folder and "/"
-						fullpath += "/" + random.choice( folderScan[ GetKeyFolderScan(fullpath)] ) 
+						fullpath += "/" + random.choice( self.folderScan[ self.GetKeyFolderScan(fullpath)] ) 
 					else:
 						# need to loop upwards until it finds a folder with unplotted folders
 						print "finding closest undone folder"
-						while files == []:
-							fullpath = self.RemoveCurrentFolder(fullpath)
-							files = FolderScan[ self.GetKeyFolderScan(fullpath) ]
+						fullpath = self.EmptyLoop(fullpath)
 	
+	def EmptyLoop(self, fullpath): # loop until folderscan list is not empty
+		print "entering EmptyLoop"
+		files = self.folderScan[ self.GetKeyFolderScan(fullpath)]
+		
+		while files == []:
+			del self.folderScan[ self.GetKeyFolderScan(fullpath)]
+			
+			fullpath = self.RemoveCurrentFolder(fullpath)
+			files = FolderScan[ self.GetKeyFolderScan(fullpath) ]
+		return fullpath
 	def RemoveCurrentFolder(self, fullpath): # remove the current folder from fullpath
 		fullpath = fullpath[0: fullpath.find( self.getFolderName(fullpath, 2) )] + self.getFolderName(fullpath, 2)
 		#notice that we remove the secound folder and then adds it back again.
@@ -90,14 +99,20 @@ class computerplot(object):
 			self.folderScan[ key ].remove( self.upperfolder )
 		
 	
+	def CheckPopulate(self, fullpath):
+		if fullpath.find("*.*") == -1:
+			fullpath = self.EmptyLoop(fullpath)
+		try :
+			files = os.listdir(fullpath)
+		except:
+			fullpath = self.EmptyLoop(fullpath)
+		return fullpath
 	def populate(self, fullpath): # scan the fullpath directory
 		fucked = False
 		files = []
+		
+		files = os.listdir(fullpath) # list all files and folders
 
-		try:
-			files = os.listdir(fullpath) # list all files and folders
-		except:
-			fucked = True
 		folders = []
 		
 		for file in files:
