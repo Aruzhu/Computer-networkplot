@@ -42,6 +42,7 @@ class computerplot(object):
 						while files == []:
 							fullpath = self.RemoveCurrentFolder(fullpath)
 							files = FolderScan[ self.GetKeyFolderScan(fullpath) ]
+	
 	def RemoveCurrentFolder(self, fullpath): # remove the current folder from fullpath
 		fullpath = fullpath[0: fullpath.find( self.getFolderName(fullpath, 2) )] + self.getFolderName(fullpath, 2)
 		#notice that we remove the secound folder and then adds it back again.
@@ -79,13 +80,14 @@ class computerplot(object):
 			key = "/"
 		print "key used = " + str(key)
 		
-		return key, upperfolder
+		self.upperfolder = upperfolder # makes the use of the function much easyer
+		return key
 	def deleteOccurance(self, fullpath):# deleting the occurance of done folder in the folderscan entry of the Upperfolder. So that it wont be plotted twice
 	
-		key, upperfolder = self.GetKeyFolderScan(fullpath)
+		key = self.GetKeyFolderScan(fullpath)
 		
-		if upperfolder in self.folderScan[ key]:
-			self.folderScan[ key ].remove( upperfolder )
+		if self.upperfolder in self.folderScan[ key]:
+			self.folderScan[ key ].remove( self.upperfolder )
 		
 	
 	def populate(self, fullpath): # scan the fullpath directory
@@ -117,7 +119,8 @@ class computerplot(object):
 		if "System Volume Information" in folders: #acts like folder but is a file
 			folders.remove("System Volume Information")
 		return folders, fucked
-		
+
+#run it!
 computerplot = computerplot()
 computerplot.__init__()
 computerplot.main()
