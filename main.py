@@ -14,7 +14,8 @@ class computerplot(object):
 		fullpath = "/"
 		
 		while going == True:
-			fullpath = self.CheckPopulate(fullpath)
+			fullpath = self.CheckPopulate(fullpath) # check the fullpath, before populating to withstand errors.
+		
 			currentFolders, fucked = self.populate(fullpath)
 			#print currentFolders
 			
@@ -30,11 +31,11 @@ class computerplot(object):
 				
 				else: # if empty
 				
-					self.deleteOccurance(fullpath)
+					self.deleteOccurance(fullpath) # delete it form folderscan
 					
 					files = self.folderScan[ self.GetKeyFolderScan(fullpath)]
 					
-					if files != []:
+					if files != []: # still not empty
 						fullpath = self.RemoveCurrentFolder(fullpath) # removing first folder and "/"
 						fullpath += "/" + random.choice( self.folderScan[ self.GetKeyFolderScan(fullpath)] ) 
 					else:
@@ -79,14 +80,19 @@ class computerplot(object):
 		upperfolder = self.getFolderName(fullpath,1)
 		print "upperfolder: " + upperfolder + "	at " + fullpath
 		
+		print "keys: " + str(self.folderScan.keys())
 		
-		if self.findOccurance("/", fullpath) != 1:
+		if self.findOccurance("/", fullpath) != 1: # if 
 			key = self.RemoveCurrentFolder(fullpath) # remove current folder from fullpath
-		else: # /selbulantimelapsv2, /xfoldername
+		elif self.findOccurance("/", fullpath) == 1: # /selbulantimelapsv2, /xfoldername
 			key = "/"
 		
 		if key == "":
-			key = "/"
+			if "/" in self.folderscan.keys():
+				key = "/"
+			else:
+				plt.savefig(platform.system()+".jpg")
+				exit()
 		print "key used = " + str(key)
 		
 
