@@ -35,7 +35,7 @@ class computerplot(object):
 					
 					files = self.folderScan[ self.GetKeyFolderScan(fullpath)]
 					
-					if files != []: # still not empty
+					if files != []: # still not empty, go deeper 
 						fullpath = self.RemoveCurrentFolder(fullpath) # removing first folder and "/"
 						fullpath += "/" + random.choice( self.folderScan[ self.GetKeyFolderScan(fullpath)] ) 
 					else:
@@ -44,15 +44,17 @@ class computerplot(object):
 						fullpath = self.EmptyLoop(fullpath)
 	
 	def EmptyLoop(self, fullpath): # loop until folderscan list is not empty
-		print "entering EmptyLoop"
+		#print "entering EmptyLoop: " + fullpath + "		" +  self.GetKeyFolderScan(fullpath)
 		files = self.folderScan[ self.GetKeyFolderScan(fullpath)]
 		
 		while files == []:
 			del self.folderScan[ self.GetKeyFolderScan(fullpath)]
 			
 			fullpath = self.RemoveCurrentFolder(fullpath)
-			files = FolderScan[ self.GetKeyFolderScan(fullpath) ]
+			files = self.folderScan[ self.GetKeyFolderScan(fullpath) ]
+			print fullpath + " " + str( len(files) )
 		return fullpath
+		
 	def RemoveCurrentFolder(self, fullpath): # remove the current folder from fullpath
 		fullpath = fullpath[0: fullpath.find( self.getFolderName(fullpath, 2) )] + self.getFolderName(fullpath, 2)
 		#notice that we remove the secound folder and then adds it back again.
@@ -77,26 +79,27 @@ class computerplot(object):
 		return occs
 	
 	def GetKeyFolderScan(self,fullpath): # get key for the FolderScan dictionary
-		upperfolder = self.getFolderName(fullpath,1)
-		print "upperfolder: " + upperfolder + "	at " + fullpath
+		print
+		print "geykeyfolderscan"
+		print
+		print fullpath
+		self.upperfolder = self.getFolderName(fullpath,1)
 		
-		print "keys: " + str(self.folderScan.keys())
-		
-		if self.findOccurance("/", fullpath) != 1: # if 
-			key = self.RemoveCurrentFolder(fullpath) # remove current folder from fullpath
+		if self.findOccurance("/", fullpath) != 1: # if more than one "/" in fullpath
+			key = self.RemoveCurrentFolder(fullpath) # remove current folder from fullpath, i.e we get the folder name where the folder we are in is, i.e the key.
 		elif self.findOccurance("/", fullpath) == 1: # /selbulantimelapsv2, /xfoldername
 			key = "/"
 		
 		if key == "":
-			if "/" in self.folderscan.keys():
+			if "/" in self.folderScan.keys():
 				key = "/"
 			else:
 				plt.savefig(platform.system()+".jpg")
 				exit()
-		print "key used = " + str(key)
+		if key not in self.folderScan.keys(): # if not valid key
+			print "key not found in fullpath"
+			print "key used: " + key
 		
-
-		self.upperfolder = upperfolder # makes the use of the function much easyer
 		return key
 	def deleteOccurance(self, fullpath):# deleting the occurance of done folder in the folderscan entry of the Upperfolder. So that it wont be plotted twice
 	
@@ -107,15 +110,24 @@ class computerplot(object):
 		
 	
 	def CheckPopulate(self, fullpath): # check if fullpath can be scanned and works.
-		if fullpath.find("*.*") == -1:
-			#fullpath = fullpath[ 0: len( self.getFolderName(fullpath,1) )+1 ]
-			fullpath = self.EmptyLoop(fullpath)
-		try :
-			files = os.listdir(fullpath)
-		except:
-			fullpath = self.EmptyLoop(fullpath)
+		print "checkpopulate"
+		if fullpath != "/":
+			if fullpath.find("*.*") == -1:
+				#fullpath = fullpath[ 0: len( self.getFolderName(fullpath,1) )+1 ]
+				fullpath = self.EmptyLoop(fullpath)
+			else: # contains *.*
+				self.EmptyLoop(fullpath)
+				
+			try : # if it fails to scan i.e premission error
+				files = os.listdir(fullpath)
+			except:
+				fullpath = self.EmptyLoop(fullpath)
+			
 		return fullpath
+		
 	def populate(self, fullpath): # scan the fullpath directory
+		self.CheckPopulate(fullpath)
+		print "populate"
 		fucked = False
 		files = []
 		
