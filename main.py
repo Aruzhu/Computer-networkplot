@@ -44,9 +44,12 @@ class computerplot(object):
 						fullpath = self.EmptyLoop(fullpath)
 	
 	def EmptyLoop(self, fullpath): # loop until folderscan list is not empty
-		#print "entering EmptyLoop: " + fullpath + "		" +  self.GetKeyFolderScan(fullpath)
+		print "entering EmptyLoop: " + fullpath + "		" +  self.GetKeyFolderScan(fullpath)
 		files = self.folderScan[ self.GetKeyFolderScan(fullpath)]
-		
+		if "*.*" in files:
+			del files[ files.index("*.*")]
+			print "indexed"
+			
 		while files == []:
 			del self.folderScan[ self.GetKeyFolderScan(fullpath)]
 			
@@ -80,8 +83,6 @@ class computerplot(object):
 	
 	def GetKeyFolderScan(self,fullpath): # get key for the FolderScan dictionary
 		print
-		print "geykeyfolderscan"
-		print
 		print fullpath
 		self.upperfolder = self.getFolderName(fullpath,1)
 		
@@ -110,7 +111,6 @@ class computerplot(object):
 		
 	
 	def CheckPopulate(self, fullpath): # check if fullpath can be scanned and works.
-		print "checkpopulate"
 		if fullpath != "/":
 			if fullpath.find("*.*") == -1:
 				#fullpath = fullpath[ 0: len( self.getFolderName(fullpath,1) )+1 ]
@@ -127,7 +127,7 @@ class computerplot(object):
 		
 	def populate(self, fullpath): # scan the fullpath directory
 		self.CheckPopulate(fullpath)
-		print "populate"
+		
 		fucked = False
 		files = []
 		
