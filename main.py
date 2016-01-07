@@ -2,6 +2,8 @@ import networkx as nx
 import os
 import random
 
+plotprint = True
+
 class computerplot(object):
 	def __init__(self):
 		self.graph = nx.Graph() # ze ram eater
@@ -38,24 +40,26 @@ class computerplot(object):
 					if files != []: # still not empty, go deeper 
 						fullpath = self.RemoveCurrentFolder(fullpath) # removing first folder and "/"
 						fullpath += "/" + random.choice( self.folderScan[ self.GetKeyFolderScan(fullpath)] ) 
-					else:
+					else: # a1
 						# need to loop upwards until it finds a folder with unplotted folders
-						print "finding closest undone folder"
+						print "finding closest undone folder, plotted all of them.  calling emptyloop, see a1"
 						fullpath = self.EmptyLoop(fullpath)
 	
 	def EmptyLoop(self, fullpath): # loop until folderscan list is not empty
-		print "entering EmptyLoop: " + fullpath + "		" +  self.GetKeyFolderScan(fullpath)
+		print "entering EmptyLoop: " + fullpath + "	- " +  self.GetKeyFolderScan(fullpath)
 		files = self.folderScan[ self.GetKeyFolderScan(fullpath)]
-		if "*.*" in files:
+		
+		if "*.*" in files: # is this really necessary?
 			del files[ files.index("*.*")]
 			print "indexed"
-			
+		
 		while files == []:
 			del self.folderScan[ self.GetKeyFolderScan(fullpath)]
 			
 			fullpath = self.RemoveCurrentFolder(fullpath)
 			files = self.folderScan[ self.GetKeyFolderScan(fullpath) ]
 			print fullpath + " " + str( len(files) )
+		#print files
 		return fullpath
 		
 	def RemoveCurrentFolder(self, fullpath): # remove the current folder from fullpath
@@ -72,6 +76,8 @@ class computerplot(object):
 		return toret
 	
 	def graphFunc(self, x, y): # x is from (fullpath), y is to (filename)
+		if plotprint == True:
+			print self.getFolderName(x,1) + " ==> " + y
 		self.graph.add_edge( self.getFolderName(x,1), y) # last element in folders is the upper foldername
 	
 	def findOccurance(self, string, tofind): # does not work with letter of tofind more than 1. we dont need that either
@@ -111,18 +117,20 @@ class computerplot(object):
 		
 	
 	def CheckPopulate(self, fullpath): # check if fullpath can be scanned and works.
+		print "check populate"
 		if fullpath != "/":
-			if fullpath.find("*.*") == -1:
-				#fullpath = fullpath[ 0: len( self.getFolderName(fullpath,1) )+1 ]
-				fullpath = self.EmptyLoop(fullpath)
-			else: # contains *.*
+			print fullpath
+			if fullpath.find("*.*") != -1: # a3 
+				print "found *.*, calling emptyloop from a3"
 				self.EmptyLoop(fullpath)
 				
 			try : # if it fails to scan i.e premission error
 				files = os.listdir(fullpath)
-			except:
-				fullpath = self.EmptyLoop(fullpath)
-			
+			except: #a4
+				print "calling emptyloop from a4"
+				fullpath = self.EmptyLoop(fullpath) # this returns fullpath with *.*
+				#self.CheckPopulate(fullpath)
+			files = os.listdir(fullpath)
 		return fullpath
 		
 	def populate(self, fullpath): # scan the fullpath directory
