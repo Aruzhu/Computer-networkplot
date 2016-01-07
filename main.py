@@ -12,7 +12,7 @@ class computerplot(object):
 		self.fucked = False
 	def functionstart(self, name):
 		if functionstartprint == True:
-			print "entering " + name + " function"
+			print("entering " + name + " function")
 	def main(self):
 		self.functionstart("main")
 		
@@ -47,7 +47,7 @@ class computerplot(object):
 						fullpath += "/" + random.choice( self.folderScan[ self.GetKeyFolderScan(fullpath)] ) 
 					else: # a1
 						# need to loop upwards until it finds a folder with unplotted folders
-						print "finding closest undone folder, plotted all of them.  calling emptyloop, see a1"
+						print("finding closest undone folder, plotted all of them.  calling emptyloop, see a1")
 						fullpath = self.EmptyLoop(fullpath)
 	
 	def EmptyLoop(self, fullpath): # loop until folderscan list is not empty
@@ -56,7 +56,7 @@ class computerplot(object):
 		
 		if "*.*" in files: # is this really necessary?
 			del files[ files.index("*.*")]
-			print "indexed"
+			print("indexed")
 		
 		while files == []:
 			del self.folderScan[ self.GetKeyFolderScan(fullpath)]
@@ -92,7 +92,7 @@ class computerplot(object):
 	def graphFunc(self, x, y): # x is from (fullpath), y is to (filename)
 		self.functionstart("graphFunc")
 		if plotprint == True:
-			print self.getFolderName(x,1) + " ==> " + y
+			print(self.getFolderName(x,1) + " ==> " + y)
 		self.graph.add_edge( self.getFolderName(x,1), y) # last element in folders is the upper foldername
 	
 	def findOccurance(self, string, tofind): # does not work with letter of tofind more than 1. we dont need that either
@@ -120,8 +120,8 @@ class computerplot(object):
 				plt.savefig(platform.system()+".jpg")
 				exit()
 		if key not in self.folderScan.keys(): # if not valid key
-			print "key not found in fullpath"
-			print "key used: " + key
+			print("key not found in fullpath")
+			print("key used: " + key)
 		
 		return key
 	def deleteOccurance(self, fullpath):# deleting the occurance of done folder in the folderscan entry of the Upperfolder. So that it wont be plotted twice
@@ -137,15 +137,15 @@ class computerplot(object):
 		self.functionstart("CheckPopulate")
 		
 		if fullpath != "/":
-			print fullpath
+			print(fullpath)
 			if fullpath.find("*.*") != -1: # a3 
-				print "found *.*, calling emptyloop from a3"
+				print("found *.*, calling emptyloop from a3")
 				self.EmptyLoop(fullpath)
 			try : # if it fails to scan i.e premission error
 				files = os.listdir(fullpath)
 			except: #a4
-				print "calling emptyloop from a4"
-				print fullpath.find("*.*")
+				print("calling emptyloop from a4")
+				print(fullpath.find("*.*"))
 				fullpath = self.EmptyLoop(fullpath) # this returns fullpath with *.*
 				fullpath = self.checkTheSymb(fullpath)
 				#self.CheckPopulate(fullpath)
@@ -157,10 +157,7 @@ class computerplot(object):
 		files = []
 		
 		fullpath = self.checkTheSymb(fullpath)
-		try:
-			files = os.listdir(fullpath) # list all files and folders
-		except:
-			files = os.listdir(fullpath[0:len(fullpath)-3])
+		files = os.listdir(fullpath) # list all files and folders
 		folders = []
 		
 		for file in files:
