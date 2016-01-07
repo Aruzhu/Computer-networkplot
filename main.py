@@ -3,14 +3,19 @@ import os
 import random
 
 plotprint = True
+functionstartprint = False
 illegalfilenames = ["Documents and Settings"]
 class computerplot(object):
 	def __init__(self):
 		self.graph = nx.Graph() # ze ram eater
 		self.current = "/" # current path
 		self.fucked = False
-	
+	def functionstart(self, name):
+		if functionstartprint == True:
+			print "entering " + name + " function"
 	def main(self):
+		self.functionstart("main")
+		
 		going = True
 		self.folderScan = {} # where os.listdir() content goes
 		fullpath = "/"
@@ -46,7 +51,7 @@ class computerplot(object):
 						fullpath = self.EmptyLoop(fullpath)
 	
 	def EmptyLoop(self, fullpath): # loop until folderscan list is not empty
-		print "entering EmptyLoop: " + fullpath + "	- " +  self.GetKeyFolderScan(fullpath)
+		self.functionstart("Emptyloop")
 		files = self.folderScan[ self.GetKeyFolderScan(fullpath)]
 		
 		if "*.*" in files: # is this really necessary?
@@ -64,11 +69,13 @@ class computerplot(object):
 		return fullpath
 		
 	def RemoveCurrentFolder(self, fullpath): # remove the current folder from fullpath
+		self.functionstart("RemoveCurrentFolder")
 		fullpath = fullpath[0: fullpath.find( self.getFolderName(fullpath, 2) )] + self.getFolderName(fullpath, 2)
 		#notice that we remove up to the secound folder and then adds it back again.
 		return fullpath
 	
 	def getFolderName(self, fullpath, backnum): # backnum 1 = folder currently in. 2= the folder where the folder we are currently are in is.
+		self.functionstart("getFolderName")
 		folders = fullpath.split("/")
 		toret = folders[ len(folders)-backnum ]
 		
@@ -76,15 +83,18 @@ class computerplot(object):
 			toret = "/"
 		return toret
 	def checkTheSymb(self, fullpath):
+		self.functionstart("checkTheSymb")
 		while fullpath.find("*.*") != -1:
 			fullpath = RemoveCurrentFolder(fullpath)
 		return fullpath
 	def graphFunc(self, x, y): # x is from (fullpath), y is to (filename)
+		self.functionstart("graphFunc")
 		if plotprint == True:
 			print self.getFolderName(x,1) + " ==> " + y
 		self.graph.add_edge( self.getFolderName(x,1), y) # last element in folders is the upper foldername
 	
 	def findOccurance(self, string, tofind): # does not work with letter of tofind more than 1. we dont need that either
+		self.functionstart("findOccurance")
 		occs = 0
 		for i in string:
 			if i == tofind:
@@ -92,8 +102,8 @@ class computerplot(object):
 		return occs
 	
 	def GetKeyFolderScan(self,fullpath): # get key for the FolderScan dictionary
-		print
-		print fullpath
+		self.functionstart("GetKeyFolderScan")
+		
 		self.upperfolder = self.getFolderName(fullpath,1)
 		
 		if self.findOccurance("/", fullpath) != 1: # if more than one "/" in fullpath
@@ -113,7 +123,8 @@ class computerplot(object):
 		
 		return key
 	def deleteOccurance(self, fullpath):# deleting the occurance of done folder in the folderscan entry of the Upperfolder. So that it wont be plotted twice
-	
+		self.functionstart("deleteOccurance")
+		
 		key = self.GetKeyFolderScan(fullpath)
 		
 		if self.upperfolder in self.folderScan[ key]:
@@ -121,7 +132,8 @@ class computerplot(object):
 		
 	
 	def CheckPopulate(self, fullpath): # check if fullpath can be scanned and works.
-		print "check populate"
+		self.functionstart("CheckPopulate")
+		
 		if fullpath != "/":
 			print fullpath
 			if fullpath.find("*.*") != -1: # a3 
@@ -138,7 +150,7 @@ class computerplot(object):
 		return fullpath
 		
 	def populate(self, fullpath): # scan the fullpath directory
-		self.CheckPopulate(fullpath)
+		#self.CheckPopulate(fullpath)
 		
 		fucked = False
 		files = []
