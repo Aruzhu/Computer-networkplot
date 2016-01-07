@@ -3,7 +3,7 @@ import os
 import random
 
 plotprint = True
-
+illegalfilenames = ["Documents and Settings"]
 class computerplot(object):
 	def __init__(self):
 		self.graph = nx.Graph() # ze ram eater
@@ -58,13 +58,14 @@ class computerplot(object):
 			
 			fullpath = self.RemoveCurrentFolder(fullpath)
 			files = self.folderScan[ self.GetKeyFolderScan(fullpath) ]
-			print fullpath + " " + str( len(files) )
-		#print files
+			
+		if fullpath.find("*.*") != -1:
+			fullpath = self.RemoveCurrentFolder(fullpath)
 		return fullpath
 		
 	def RemoveCurrentFolder(self, fullpath): # remove the current folder from fullpath
 		fullpath = fullpath[0: fullpath.find( self.getFolderName(fullpath, 2) )] + self.getFolderName(fullpath, 2)
-		#notice that we remove the secound folder and then adds it back again.
+		#notice that we remove up to the secound folder and then adds it back again.
 		return fullpath
 	
 	def getFolderName(self, fullpath, backnum): # backnum 1 = folder currently in. 2= the folder where the folder we are currently are in is.
@@ -74,7 +75,10 @@ class computerplot(object):
 		if backnum > len(folders): # /selbulantimelapsv2 (backnum 2 = "/")
 			toret = "/"
 		return toret
-	
+	def checkTheSymb(self, fullpath):
+		while fullpath.find("*.*") != -1:
+			fullpath = RemoveCurrentFolder(fullpath)
+		return fullpath
 	def graphFunc(self, x, y): # x is from (fullpath), y is to (filename)
 		if plotprint == True:
 			print self.getFolderName(x,1) + " ==> " + y
@@ -123,14 +127,14 @@ class computerplot(object):
 			if fullpath.find("*.*") != -1: # a3 
 				print "found *.*, calling emptyloop from a3"
 				self.EmptyLoop(fullpath)
-				
 			try : # if it fails to scan i.e premission error
 				files = os.listdir(fullpath)
 			except: #a4
 				print "calling emptyloop from a4"
+				print fullpath.find("*.*")
 				fullpath = self.EmptyLoop(fullpath) # this returns fullpath with *.*
+				fullpath = self.checkTheSymb(fullpath)
 				#self.CheckPopulate(fullpath)
-			files = os.listdir(fullpath)
 		return fullpath
 		
 	def populate(self, fullpath): # scan the fullpath directory
@@ -139,6 +143,7 @@ class computerplot(object):
 		fucked = False
 		files = []
 		
+		fullpath = self.checkTheSymb(fullpath)
 		files = os.listdir(fullpath) # list all files and folders
 
 		folders = []
@@ -159,8 +164,9 @@ class computerplot(object):
 		if bool(folders): # if not empty
 			self.folderScan[fullpath] = files
 		
-		if "System Volume Information" in folders: #acts like folder but is a file
-			folders.remove("System Volume Information")
+		for file in illegalfilenames: # delete the buggy ones.
+			if file in folders:
+				folders.remove(file)
 		return folders, fucked
 
 #run it!
