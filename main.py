@@ -3,7 +3,7 @@ import os
 import random
 
 plotprint = True
-functionstartprint = False
+functionstartprint = True
 illegalfilenames = ["Documents and Settings"]
 class computerplot(object):
 	def __init__(self):
@@ -82,11 +82,13 @@ class computerplot(object):
 		if backnum > len(folders): # /selbulantimelapsv2 (backnum 2 = "/")
 			toret = "/"
 		return toret
+		
 	def checkTheSymb(self, fullpath):
 		self.functionstart("checkTheSymb")
 		while fullpath.find("*.*") != -1:
 			fullpath = RemoveCurrentFolder(fullpath)
 		return fullpath
+		
 	def graphFunc(self, x, y): # x is from (fullpath), y is to (filename)
 		self.functionstart("graphFunc")
 		if plotprint == True:
@@ -150,14 +152,15 @@ class computerplot(object):
 		return fullpath
 		
 	def populate(self, fullpath): # scan the fullpath directory
-		#self.CheckPopulate(fullpath)
 		
 		fucked = False
 		files = []
 		
 		fullpath = self.checkTheSymb(fullpath)
-		files = os.listdir(fullpath) # list all files and folders
-
+		try:
+			files = os.listdir(fullpath) # list all files and folders
+		except:
+			files = os.listdir(fullpath[0:len(fullpath)-3])
 		folders = []
 		
 		for file in files:
