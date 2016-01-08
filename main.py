@@ -3,8 +3,8 @@ import os
 import random
 
 plotprint = True
-functionstartprint = True
-illegalfilenames = ["Documents and Settings"]
+functionstartprint = False
+illegalfilenames = ["Documents and Settings", "globdata.ini"]
 class computerplot(object):
 	def __init__(self):
 		self.graph = nx.Graph() # ze ram eater
@@ -141,13 +141,12 @@ class computerplot(object):
 			if fullpath.find("*.*") != -1: # a3 
 				print("found *.*, calling emptyloop from a3")
 				self.EmptyLoop(fullpath)
-			try : # if it fails to scan i.e premission error
+			try : # if it fails to scan i.e premission error, 
 				files = os.listdir(fullpath)
 			except: #a4
 				print("calling emptyloop from a4")
 				print(fullpath.find("*.*"))
 				fullpath = self.EmptyLoop(fullpath) # this returns fullpath with *.*
-				fullpath = self.checkTheSymb(fullpath)
 				#self.CheckPopulate(fullpath)
 		return fullpath
 		
