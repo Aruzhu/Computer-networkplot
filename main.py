@@ -4,7 +4,7 @@ import random
 
 plotprint = True
 functionstartprint = False
-illegalfilenames = ["Documents and Settings", "globdata.ini"]
+filePrison = ["Documents and Settings", "System Volume Information"] #bad bad files
 class computerplot(object):
 	def __init__(self):
 		self.graph = nx.Graph() # ze ram eater
@@ -29,8 +29,8 @@ class computerplot(object):
 			if fucked == True: # did not have premission to scan the folder
 				fullpath = fullpath[ 0: len( self.getFolderName(fullpath,1) )+1 ] # remove the upperfolder, +1 because of the backslash
 			else: # if everything works
+			
 				if currentFolders: # if not empty
-				
 					if fullpath != "/": #see issue #1
 						fullpath += "/" + random.choice( currentFolders ) # random next folder, continue going deeper
 					else:
@@ -49,7 +49,7 @@ class computerplot(object):
 						# need to loop upwards until it finds a folder with unplotted folders
 						print("finding closest undone folder, plotted all of them.  calling emptyloop, see a1")
 						fullpath = self.EmptyLoop(fullpath)
-	
+						
 	def EmptyLoop(self, fullpath): # loop until folderscan list is not empty
 		self.functionstart("Emptyloop")
 		files = self.folderScan[ self.GetKeyFolderScan(fullpath)]
@@ -64,8 +64,6 @@ class computerplot(object):
 			fullpath = self.RemoveCurrentFolder(fullpath)
 			files = self.folderScan[ self.GetKeyFolderScan(fullpath) ]
 			
-		if fullpath.find("*.*") != -1:
-			fullpath = self.RemoveCurrentFolder(fullpath)
 		return fullpath
 		
 	def RemoveCurrentFolder(self, fullpath): # remove the current folder from fullpath
@@ -83,11 +81,6 @@ class computerplot(object):
 			toret = "/"
 		return toret
 		
-	def checkTheSymb(self, fullpath):
-		self.functionstart("checkTheSymb")
-		while fullpath.find("*.*") != -1:
-			fullpath = RemoveCurrentFolder(fullpath)
-		return fullpath
 		
 	def graphFunc(self, x, y): # x is from (fullpath), y is to (filename)
 		self.functionstart("graphFunc")
@@ -138,9 +131,7 @@ class computerplot(object):
 		
 		if fullpath != "/":
 			print(fullpath)
-			if fullpath.find("*.*") != -1: # a3 
-				print("found *.*, calling emptyloop from a3")
-				self.EmptyLoop(fullpath)
+			
 			try : # if it fails to scan i.e premission error, 
 				files = os.listdir(fullpath)
 			except: #a4
@@ -155,8 +146,7 @@ class computerplot(object):
 		fucked = False
 		files = []
 		
-		fullpath = self.checkTheSymb(fullpath)
-		files = os.listdir(fullpath) # list all files and folders
+		files = os.listdir(fullpath) # list all files and folders, is getting files for some reason
 		folders = []
 		
 		for file in files:
@@ -175,7 +165,7 @@ class computerplot(object):
 		if bool(folders): # if not empty
 			self.folderScan[fullpath] = files
 		
-		for file in illegalfilenames: # delete the buggy ones.
+		for file in filePrison: # delete the buggy ones.
 			if file in folders:
 				folders.remove(file)
 		return folders, fucked
