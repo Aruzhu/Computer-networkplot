@@ -31,9 +31,9 @@ class computerplot(object):
 			else: # if everything works
 			
 				if currentFolders: # if not empty
-					if fullpath != "/": #see issue #1
+					if fullpath != "/": 
 						fullpath += "/" + random.choice( currentFolders ) # random next folder, continue going deeper
-					else:
+					else: # fullpath is currently just "/"
 						fullpath += random.choice( currentFolders )
 				
 				else: # if empty
@@ -53,10 +53,6 @@ class computerplot(object):
 	def EmptyLoop(self, fullpath): # loop until folderscan list is not empty
 		self.functionstart("Emptyloop")
 		files = self.folderScan[ self.GetKeyFolderScan(fullpath)]
-		
-		if "*.*" in files: # is this really necessary?
-			del files[ files.index("*.*")]
-			print("indexed")
 		
 		while files == []:
 			del self.folderScan[ self.GetKeyFolderScan(fullpath)]
@@ -80,7 +76,6 @@ class computerplot(object):
 		if backnum > len(folders): # /selbulantimelapsv2 (backnum 2 = "/")
 			toret = "/"
 		return toret
-		
 		
 	def graphFunc(self, x, y): # x is from (fullpath), y is to (filename)
 		self.functionstart("graphFunc")
