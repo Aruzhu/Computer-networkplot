@@ -7,6 +7,7 @@ functionstartprint = True
 illegalfilenames = ["Documents and Settings"]
 class computerplot(object):
 	def __init__(self):
+		print 'self running'
 		self.graph = nx.Graph() # ze ram eater
 		self.current = "/" # current path
 		self.fucked = False
@@ -50,7 +51,9 @@ class computerplot(object):
 						print "finding closest undone folder, plotted all of them.  calling emptyloop, see a1"
 						fullpath = self.EmptyLoop(fullpath)
 	
-	def EmptyLoop(self, fullpath): # loop until folderscan list is not empty
+	def EmptyLoop(self, fullpath):
+		'''loop until folderscan list is not empty
+		'''
 		self.functionstart("Emptyloop")
 		files = self.folderScan[ self.GetKeyFolderScan(fullpath)]
 		
@@ -184,7 +187,20 @@ class computerplot(object):
 				folders.remove(file)
 		return folders, fucked
 
-#run it!
-computerplot = computerplot()
-computerplot.__init__()
-computerplot.main()
+class plotter():
+	import matplotlib.pyplot as plt
+
+	def __init__(self, myNodes=['1.txt', '2.txt', 'jon_elias.bmp', 'mappe'], myEdges=[('1.txt', 'mappe'), ('2.txt','mappe'), ('jon_elias.bmp','mappe')]):
+		G=nx.Graph()
+		G.add_nodes_from(myNodes)
+		G.add_edges_from(myEdges)
+		pos=nx.spring_layout(G) # positions for all nodes
+		nx.draw(G, pos)
+		nx.draw_networkx_labels(G, pos)
+		self.plt.savefig('output.png')
+
+if __name__ == '__main__':
+	#run it!
+	plotter()
+	#computerplot = computerplot()
+	#computerplot.main()
