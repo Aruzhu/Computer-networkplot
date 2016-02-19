@@ -7,6 +7,7 @@ functionstartprint = False
 filePrison = ["Documents and Settings", "System Volume Information"] #bad bad files
 class computerplot(object):
 	def __init__(self):
+		print 'self running'
 		self.graph = nx.Graph() # ze ram eater
 		self.current = "/" # current path
 		self.fucked = False
@@ -49,8 +50,10 @@ class computerplot(object):
 						# need to loop upwards until it finds a folder with unplotted folders
 						print("finding closest undone folder, plotted all of them.  calling emptyloop, see a1")
 						fullpath = self.EmptyLoop(fullpath)
-						
-	def EmptyLoop(self, fullpath): # loop until folderscan list is not empty
+
+	def EmptyLoop(self, fullpath):
+		'''loop until folderscan list is not empty
+		'''
 		self.functionstart("Emptyloop")
 		files = self.folderScan[ self.GetKeyFolderScan(fullpath)]
 		
@@ -165,7 +168,9 @@ class computerplot(object):
 				folders.remove(file)
 		return folders, fucked
 
-#run it!
-computerplot = computerplot()
-computerplot.__init__()
-computerplot.main()
+
+if __name__ == '__main__':
+	#run it!
+	#plotter()
+	computerplot = computerplot()
+	computerplot.main()
