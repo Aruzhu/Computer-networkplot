@@ -52,8 +52,6 @@ class computerplot(object):
 						fullpath = self.EmptyLoop(fullpath)
 
 	def EmptyLoop(self, fullpath):
-		'''loop until folderscan list is not empty
-		'''
 		self.functionstart("Emptyloop")
 		files = self.folderScan[ self.GetKeyFolderScan(fullpath)]
 		
